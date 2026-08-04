@@ -1,0 +1,14 @@
+{
+  "name": "slide-deck-skill",
+  "owner": {
+    "name": "meshkorea"
+  },
+  "description": "발표 슬라이드 덱(자립형 HTML) 제작 스킬 마켓플레이스",
+  "plugins": [
+    {
+      "name": "slide-deck",
+      "source": "./plugins/slide-deck",
+      "description": "딥 네이비 · 큰 타이포 스타일의 발표 슬라이드 덱(자립형 HTML)을 만들고 헤드리스 Chrome으로 렌더·확인하는 스킬"
+    }
+  ]
+}

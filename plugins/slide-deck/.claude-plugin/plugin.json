@@ -1,0 +1,8 @@
+{
+  "name": "slide-deck",
+  "version": "0.5.0",
+  "description": "발표 슬라이드 덱(자립형 HTML) 제작·렌더 스킬. 무료 폰트 선택(noonnu) · 딥 네이비 · 큰 타이포 · 음슴체 · 손그림 스케치 레이어 · EOD 마무리 장.",
+  "author": {
+    "name": "meshkorea"
+  }
+}

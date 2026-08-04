@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>덱 제목 — 부제</title>
+    <!--
+  ═══════════════════════════════════════════════════════════════════
+  디자인 브리프 (덱마다 파일 상단 주석에 명문화 — 이력·근거·용어 결정)
+
+  스타일 규약은 SKILL.md 참조. 요약:
+    · 폰트 — 덱마다 하나만 골라 씀(기본 Asta Sans). noonnu 무료 글꼴 프리셋에서 선택(위 <link> 주석)
+      · 한 덱 = 한 폰트 · 모노스페이스만 금지 · --font 와 <link> href 를 짝으로 교체
+    · 큰 타이포 · 카피 줄이기 (본문 32px 권장 · 넘치면 .dense 로 축소하되 24px 미만 금지 · 캡션 ≥18px @1280×720)
+    · 말투 — 제목 간결 명사형, 본문 음슴체(-함/-됨/-음), 마침표 최소
+    · 텍스트를 사각 틀에 가두지 않음 — 구획은 hairline(가는 줄)·여백으로
+    · 제목+불릿(구분점)이 워크호스 — 단순 나열은 표·사분면 우회 금지. ul.bul(사각 마커)·.rows(hairline)·ol.num(넘버) 중 택1
+    · 프라이머리 컬러는 oklch 변수(--main-h)로 교체 가능 — :root 프리셋 표 참조. 쨍한 원색 금지(L·C 고정)
+      (변수명 --blue 는 레거시 — 색은 덱마다 다르니 "블루"라 부르지 말 것)
+    · 포인트 컬러는 형광펜식 밑줄(.ul)로만, 글자색 입히기·사각 마커 금지
+    · 스케치: 강조엔 링·스와시·유도 화살표 / 여백엔 포커스 버스트(.sk.focus)·필러(.sk.faint)·손그림 별(.sk.star)
+      필러는 크게 + 아주 옅게(배경 텍스처 톤) · 화면 가장자리로 빼서 잘리듯(edge-bleed), 여백 안에 뚝 놓지 말 것
+      버스트는 텍스트에 안 닿게 · 장당 1~2개, 진짜 빈 곳에만
+      · 표지 배경 장식은 덱 주제에 맞춰 새로 그린다 — 매번 등고선+별로 시작 금지(간단한 라인 모티프, path만, 손그림 톤)
+    · 페이지 번호·푸터·운영 메타·알약 태그·영문 kicker 금지
+    · 마무리 — 덱은 항상 EOD 클로징 한 장으로 끝냄(감사 인사 결 / End of Document 결 택1, 마지막 section)
+  ═══════════════════════════════════════════════════════════════════
+-->
+    <!-- ── 폰트 — noonnu.cc 무료 글꼴 중 하나(fonts-archive CDN). 덱마다 하나만 골라 씀.
+         아래 <link> href 와 :root 의 --font 를 짝으로 바꾸면 덱 전체 폰트가 교체된다.
+         프리셋(링크 파일명 · font-family · weight 범위):
+           Asta Sans(기본)  AstaSans        · "Asta Sans"        300–800     개성 있는 지오메트릭 · 이 스타일의 시그니처
+           페이퍼로지        Paperlogy       · "Paperlogy"        100–900     둥근 디스플레이 · 표지·한 줄 슬라이드에 강함
+           프리텐다드        Pretendard      · "Pretendard"       100–900     가장 무난한 본문용 산세리프
+           수트(SUIT)       SUIT            · "SUIT"             100–900     모던·중립 · 정보 밀도 높은 장에 좋음
+           G마켓 산스 ※     GmarketSans     · "Gmarket Sans"     300·500·700 또렷한 브랜드 톤
+           나눔스퀘어 네오 ※ NanumSquareNeo  · "Nanum Square Neo" 300·400·700–900 각진 고딕 · 힘 있는 제목
+           나눔스퀘어 ※      NanumSquare     · "Nanum Square"     300·400·700·800 클래식 고딕
+         ※ 표시는 웨이트 단계가 성겨(500·600 없음) 제목/본문 위계가 살짝 뭉갤 수 있음 — 렌더로 확인 필수. -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/fonts-archive/AstaSans/AstaSans.css"
+    />
+    <style>
+      :root {
+        /* 폰트 — 위 <link> 와 짝. 바꿀 땐 이 값과 <link> href 를 함께 교체.
+           프리셋 family: "Asta Sans" · "Paperlogy" · "Pretendard" · "SUIT"
+                        · "Gmarket Sans" · "Nanum Square Neo" · "Nanum Square" */
+        --font: "Asta Sans";
+
+        --paper: #f7f7f4;
+        --ink: #14161a;
+        --mute: #6e7178;
+        --hair: rgba(20, 22, 26, 0.15);
+
+        /* ── 프라이머리 컬러 — oklch(L C H). 변수명 --blue 는 레거시 — 실제 색은 덱마다
+             다르니 "블루"라 부르지 말 것. L(명도)·C(채도)는 딥 네이비 톤으로 고정,
+             H(색상)만 갈아끼워 덱 정체성을 바꾼다. 아래 프리셋에서 하나 골라 --main-h 교체.
+             (쨍한 원색 금지 규칙은 그대로 — L·C를 이 범위 밖으로 올리지 말 것)
+
+               딥 네이비(기본)  H 272   · 인디고        H 290   · 딥 플럼   H 320
+               와인/버건디      H 15    · 러스트/벽돌    H 45     · 포레스트  H 150
+               딥 틸 ※         H 195   · 오션 ※        H 230
+
+             ※ 틸·오션(청록 계열)은 이 명도에서 채도가 덜 붙는다 —
+               해당 프리셋을 쓸 땐 --main-l:0.40, --main-c:0.068 로 함께 바꿔 깊이를 맞춘다. */
+        --main-l: 0.385;
+        --main-c: 0.09;
+        --main-h: 272; /* ← 여기만 바꾸면 프라이머리 컬러 전체가 따라 바뀐다 */
+        --blue: oklch(var(--main-l) var(--main-c) var(--main-h)); /* 프라이머리 (한 줄 슬라이드 배경·결정 문장·강조 수치) */
+
+        /* 포인트 3색 — 라이트한 파스텔 톤(oklch L≈0.77 · C≈0.13)으로 서로 자매색.
+           프라이머리(--blue)와 달리 밝고 채도가 붙는다. 밑줄(.ul)로만 쓰고 글자색·마커 금지. */
+        --mint: #43d6ae; /* 포인트 A · oklch(0.789 0.136 171) */
+        --pink: #f186b0; /* 포인트 B · oklch(0.748 0.138 356) */
+        --sky: #60befc; /* 포인트 C · oklch(0.77 0.126 240) — 라이트 블루 */
+        --wht: #fcfcfa;
+        --whtsoft: rgba(252, 252, 250, 0.78);
+
+        /* 본문 글자 크기 — 권장 32px. 꽉 찬 장은 .dense 로 축소하되 24px 밑으로는 금지 */
+        --body: 32px;
+        /* 캡션·라벨·표 헤더 — 문서 크기(≤18px)로 쪼그라들지 않게 24px 기본 */
+        --cap: 24px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        background: #101114;
+        overflow: hidden;
+        /* 모바일: 스와이프/탭을 스크립트가 직접 다룸 — 브라우저 스크롤·확대·엣지스와이프 간섭 차단 */
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        font-family:
+          var(--font), "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #stage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1280px;
+        height: 720px;
+        transform-origin: center center;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        width: 1280px;
+        height: 720px;
+        padding: 64px 96px;
+        background: var(--paper);
+        color: var(--ink);
+        display: none;
+      }
+      .slide.active {
+        display: block;
+      } /* 전환은 플레인 컷 — 디졸브 시 검은 배경이 비쳐 산만 */
+
+      /* ── 한 줄 슬라이드 — 네이비 필드 + 흰 글자. 섹션 브레이크용 ── */
+      .slide.one-liner {
+        background: var(--blue);
+        color: var(--wht);
+      }
+      .one-liner h1 {
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.12;
+      }
+      .one-liner .fn {
+        position: absolute;
+        left: 96px;
+        bottom: 96px;
+        font-size: 28px;
+        line-height: 1.55;
+        color: var(--whtsoft);
+        max-width: 1040px;
+      }
+      .one-liner .fn b {
+        color: var(--wht);
+        font-weight: 800;
+      }
+
+      /* ── 포인트 = 텍스트 아래 살짝 걸치는 형광펜식 밑줄 (글자색 금지) ── */
+      .ul {
+        padding: 0 3px;
+        margin: 0 -1px;
+        background-image: linear-gradient(
+          transparent 72%,
+          var(--_c) 72%,
+          var(--_c) 94%,
+          transparent 94%
+        );
+      }
+      .ul.mint {
+        --_c: var(--mint);
+      }
+      .ul.pink {
+        --_c: var(--pink);
+      }
+      .ul.sky {
+        --_c: var(--sky);
+      }
+      .ul.blue {
+        --_c: oklch(var(--main-l) var(--main-c) var(--main-h) / 0.26);
+      }
+
+      /* ── 스케치 레이어 — 손그림 링 · 밑줄 스와시 · 유도 화살표 ──
+         프라이머리 단일, 한 줄 슬라이드에서만 흰색. 불투명도 .55 = 연필 메모 톤.
+         화살표는 바깥→안쪽, 장당 가리키는 대상은 하나. */
+      .sk {
+        position: absolute;
+        pointer-events: none;
+        overflow: visible;
+      }
+      svg.ska {
+        overflow: visible;
+      }
+      .sk path,
+      svg.ska path,
+      .ring > svg path,
+      .swash > svg path {
+        fill: none;
+        stroke: var(--blue);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-opacity: 0.55;
+      }
+      .thick path {
+        stroke-width: 4;
+      }
+      .ring {
+        position: relative;
+        display: inline-block;
+      }
+      .ring > svg {
+        position: absolute;
+        left: -0.16em;
+        top: -0.14em;
+        width: calc(100% + 0.32em);
+        height: calc(100% + 0.28em);
+        overflow: visible;
+        pointer-events: none;
+      }
+      .ring.pad > svg {
+        left: -0.45em;
+        top: -0.34em;
+        width: calc(100% + 0.9em);
+        height: calc(100% + 0.68em);
+      }
+      .swash {
+        position: relative;
+        display: inline-block;
+      }
+      .swash > svg {
+        position: absolute;
+        left: -2px;
+        bottom: -0.1em;
+        width: calc(100% + 4px);
+        height: 0.18em;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .one-liner .sk path {
+        stroke: var(--wht);
+      }
+      .one-liner .sk.soft path {
+        stroke: var(--whtsoft);
+      }
+      .one-liner .swash > svg path {
+        stroke: var(--wht);
+      }
+
+      /* ── 배경 장식 레이어 — 빈 곳을 채우는 필러 · 대상을 감싸는 포커스 버스트 ──
+         유도 화살표(.sk, 불투명도 .55)보다 더 흐리게 깔아 "메모지 여백 낙서" 톤.
+         전부 절대 좌표(.sk) 위에 얹고, 텍스트 뒤로 물러나야 하므로 z-index 없이 먼저 배치.
+         배경 장식은 장당 1~2개까지 — 남발하면 산만해진다. */
+
+      /* 필러 — 빈 공간용 손그림. 배경 텍스처로 읽히게 크게 그리고 아주 옅게(.12).
+         작게 찍으면 낙서처럼 성의없어 보인다 — 슬라이드 폭의 1/3~1/2로 크게 깔 것.
+         손그림 별(.star)만은 여백의 액센트라 조금 더 진하게(.22) 둔다. */
+      .sk.faint path {
+        stroke-opacity: 0.12;
+      }
+      .sk.faint.thin path {
+        stroke-width: 1.6;
+      }
+      .sk.star path {
+        stroke-opacity: 0.22;
+      }
+      /* 포커스 버스트 — 대상을 원형으로 감싸 안쪽으로 모이는 화살표 무리.
+         가리키는 대상 위에 얹고 left/top/width/height로 감싸는 크기를 맞춘다. */
+      .sk.focus path {
+        stroke-opacity: 0.4;
+        stroke-width: 2.2;
+      }
+      /* 포인트 3색으로 물들인 필러/버스트 (밑줄 규칙과 별개 — 배경 장식은 색 허용) */
+      .sk.mint path {
+        stroke: var(--mint);
+      }
+      .sk.pink path {
+        stroke: var(--pink);
+      }
+      .sk.sky path {
+        stroke: var(--sky);
+      }
+      /* 한 줄 슬라이드에선 필러·버스트도 흰색, 필러는 더 은은하게 */
+      .one-liner .sk.faint path {
+        stroke-opacity: 0.18;
+      }
+
+      /* ── 타입 역할 — 큰 스케일이 기본. 문서 크기 글씨 금지 ── */
+      .ctx {
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--mute);
+      } /* 장 상단 맥락 라벨 */
+      h2.title {
+        font-weight: 800;
+        font-size: 50px;
+        letter-spacing: -0.04em;
+        line-height: 1.12;
+        margin-top: 10px;
+      }
+      .take {
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: -0.01em;
+        line-height: 1.35;
+      } /* 장 하단 테이크어웨이 — 보통 좌하단 고정 배치 */
+      .take em {
+        font-style: normal;
+        color: var(--blue);
+      }
+      .lbl {
+        font-size: var(--cap);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--mute);
+      }
+
+      ul.pl {
+        list-style: none;
+      }
+      ul.pl li {
+        font-size: var(--body);
+        line-height: 1.4;
+        letter-spacing: -0.02em;
+        padding: 7px 0;
+        word-break: keep-all;
+      }
+      ul.pl li b {
+        font-weight: 700;
+      }
+      ul.pl li span {
+        color: var(--mute);
+      }
+
+      /* 2단 구획 — 테두리 박스가 아니라 가운데 hairline 하나로 나눔 */
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 60px;
+        margin-top: 32px;
+      }
+      .cols .c2 {
+        border-left: 1px solid var(--hair);
+        padding-left: 60px;
+      }
+      .cols h3 {
+        font-weight: 800;
+        font-size: 27px;
+        letter-spacing: -0.01em;
+        margin-bottom: 12px;
+      }
+
+      /* 플로우 — 화살표로 이어지는 단계. i = 연결자(→) */
+      .flow {
+        font-size: var(--body);
+        font-weight: 700;
+        line-height: 1.7;
+        letter-spacing: -0.02em;
+      }
+      .flow i {
+        font-style: normal;
+        color: var(--mute);
+        font-weight: 400;
+        padding: 0 7px;
+      }
+      .flow.mut {
+        color: var(--mute);
+        font-weight: 500;
+      }
+
+      /* 밴드 — 라벨 | 내용의 행. 구분은 위쪽 hairline (박스 아님) */
+      .band {
+        display: grid;
+        grid-template-columns: 270px 1fr;
+        column-gap: 48px;
+        padding: 17px 0;
+      }
+      .band + .band {
+        border-top: 1px solid var(--hair);
+      }
+      .band .who {
+        font-weight: 800;
+        font-size: 27px;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .band .who small {
+        display: block;
+        font-weight: 500;
+        font-size: var(--cap);
+        letter-spacing: -0.02em;
+        color: var(--mute);
+        margin-top: 6px;
+      }
+      .band ul {
+        list-style: none;
+      }
+      .band li {
+        font-size: var(--body);
+        line-height: 1.38;
+        letter-spacing: -0.02em;
+        padding: 5px 0;
+        word-break: keep-all;
+      }
+      .band li b {
+        font-weight: 700;
+      }
+      .band li span {
+        color: var(--mute);
+      }
+      .band.open .who {
+        color: var(--blue);
+      }
+
+      /* 표 — 세로 괘선·셀 배경 없음. 상단 굵은 프라이머리 괘선 + 행 hairline만 */
+      table.min {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 2px solid var(--blue);
+      }
+      table.min td {
+        padding: 15px 6px;
+        border-bottom: 1px solid var(--hair);
+        font-size: var(--body);
+        line-height: 1.38;
+        letter-spacing: -0.02em;
+        vertical-align: top;
+      }
+      table.min td.k {
+        font-weight: 800;
+        width: 310px;
+      }
+      table.min td span {
+        color: var(--mute);
+      }
+      table.min tr.hd td {
+        font-size: var(--cap);
+        color: var(--mute);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        border-bottom: 1.5px solid var(--ink);
+        padding: 9px 6px;
+      }
+
+      /* 여정 — 가로 스텝. 박스 없이 굵은 단어 + 화살표 SVG */
+      .journey {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-top: 46px;
+      }
+      .jstep {
+        flex: 1;
+      }
+      .jstep .w {
+        font-weight: 800;
+        font-size: 33px;
+        letter-spacing: -0.01em;
+      }
+      .jstep .s {
+        font-size: var(--cap);
+        color: var(--mute);
+        margin-top: 8px;
+        line-height: 1.4;
+        letter-spacing: -0.02em;
+        word-break: keep-all;
+      }
+      .jarr svg {
+        width: 46px;
+        height: 25px;
+        display: block;
+        margin-top: 11px;
+      }
+
+      /* 수치 그리드 — 큰 프라이머리 숫자 + 회색 설명 */
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 56px 56px;
+        margin-top: 56px;
+      }
+      .stat .n {
+        font-weight: 800;
+        font-size: 56px;
+        letter-spacing: -0.02em;
+        line-height: 1.08;
+        color: var(--blue);
+      }
+      .stat .d {
+        font-size: var(--cap);
+        color: var(--mute);
+        margin-top: 9px;
+        line-height: 1.4;
+        letter-spacing: -0.02em;
+      }
+
+      /* 사분면 — 상단 프라이머리 괘선으로만 구획, 번호는 프라이머리 */
+      .quad {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px 72px;
+        margin-top: 64px;
+      }
+      .quad .q {
+        border-top: 2px solid var(--blue);
+        padding-top: 18px;
+      }
+      .quad h3 {
+        font-weight: 800;
+        font-size: 36px;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+        word-break: keep-all;
+      }
+      .quad h3 i {
+        font-style: normal;
+        color: var(--blue);
+        margin-right: 4px;
+      }
+      .quad p {
+        font-size: var(--body);
+        color: var(--mute);
+        margin-top: 10px;
+        line-height: 1.42;
+        letter-spacing: -0.02em;
+        word-break: keep-all;
+      }
+      .quad p b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      /* ── 제목 + 불릿(구분점) — 가장 흔한 워크호스 장. 세 결 중 내용에 맞는 걸 고른다.
+         구분점은 카드·사각마커가 아니라 가는 프라이머리 괘선·hairline·넘버로만(박스 금지).
+         (ul.pl 은 마커 없는 컴팩트 리스트 — 밴드 안이나 촘촘한 나열용. 아래 셋과 별개) */
+
+      /* A · 사각 마커 불릿 — 항목 앞 작은 프라이머리 사각. 한 줄로 끝나는 일반 불릿에 최적.
+         마커는 첫 줄 높이 중앙에 정렬(top = 패딩 + 반줄, translateY 로 마커 중심 정렬) */
+      ul.bul {
+        list-style: none;
+        margin-top: 42px;
+      }
+      ul.bul li {
+        position: relative;
+        font-size: var(--body);
+        line-height: 1.42;
+        letter-spacing: -0.02em;
+        padding: 11px 0 11px 40px;
+        word-break: keep-all;
+      }
+      ul.bul li::before {
+        content: "";
+        position: absolute;
+        left: 3px;
+        top: calc(11px + 0.71em);
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        background: var(--blue);
+        border-radius: 1.5px;
+      }
+      ul.bul li b {
+        font-weight: 800;
+      }
+      ul.bul li span {
+        color: var(--mute);
+      }
+      /* 들여쓰기(하위 불릿) — 상위 사각보다 작고 흐린 사각으로 위계. 한 단계만 권장.
+         폰트는 그대로(--body 하한 유지), 마커 크기·색·들여쓰기로만 depth 를 준다. */
+      ul.bul ul {
+        list-style: none;
+        margin-top: 2px;
+      }
+      ul.bul ul li {
+        position: relative;
+        font-size: var(--body);
+        line-height: 1.4;
+        letter-spacing: -0.02em;
+        padding: 6px 0 6px 30px;
+        color: var(--mute);
+        word-break: keep-all;
+      }
+      ul.bul ul li::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: calc(6px + 0.7em);
+        transform: translateY(-50%);
+        width: 7px;
+        height: 7px;
+        background: var(--mute);
+        border-radius: 1px;
+      }
+      ul.bul ul li b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      /* B · hairline 구분 리스트 — 항목마다 제목 줄 + 설명 줄. 설명이 붙는 불릿에.
+         band 에서 라벨 열만 뺀 단일 열 결 — 위쪽 hairline 으로만 구분(박스 아님) */
+      .rows {
+        margin-top: 40px;
+      }
+      .rows .r {
+        padding: 18px 0;
+      }
+      .rows .r + .r {
+        border-top: 1px solid var(--hair);
+      }
+      .rows .r h3 {
+        font-weight: 800;
+        font-size: 30px;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+        word-break: keep-all;
+      }
+      .rows .r p {
+        font-size: var(--body);
+        color: var(--mute);
+        margin-top: 6px;
+        line-height: 1.4;
+        letter-spacing: -0.02em;
+        word-break: keep-all;
+      }
+      .rows .r p b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      /* C · 넘버 리스트(01/02) — 순서·우선순위가 있을 때. 행잉 인덴트.
+         사분면(.quad)의 원문자 ①②③와 시각적으로 구별되는 큰 프라이머리 넘버 */
+      ol.num {
+        list-style: none;
+        counter-reset: n;
+        margin-top: 40px;
+      }
+      ol.num li {
+        counter-increment: n;
+        position: relative;
+        padding: 12px 0 12px 74px;
+        font-size: var(--body);
+        line-height: 1.42;
+        letter-spacing: -0.02em;
+        word-break: keep-all;
+      }
+      ol.num li::before {
+        content: counter(n, decimal-leading-zero);
+        position: absolute;
+        left: 0;
+        top: calc(12px + 0.71em);
+        transform: translateY(-50%);
+        font-weight: 800;
+        font-size: 30px;
+        letter-spacing: -0.03em;
+        color: var(--blue);
+        line-height: 1;
+      }
+      ol.num li b {
+        font-weight: 800;
+      }
+      ol.num li span {
+        color: var(--mute);
+      }
+
+      /* 꽉 찬 장에만 .dense 로 본문을 한 단계 축소 — 남발 금지, 넘치면 먼저 카피를 줄일 것.
+         --body 를 낮추므로 리스트·표·밴드·flow·사분면 본문이 한꺼번에 줄어든다.
+         26px 로 낮추되 24px 밑으로는 절대 내리지 말 것(하한). 더 필요하면 카피를 덜어낸다. */
+      .dense {
+        --body: 26px;
+      }
+      .dense .band {
+        padding: 14px 0;
+      }
+      .dense .band li {
+        padding: 4px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <!-- S01 · 표지 — 큰 타이포, 손그림 링, 밑줄 3색. 운영 메타 없음 -->
+      <section class="slide">
+        <p style="font-size: 20px; font-weight: 600; color: var(--mute)">
+          팀 · 조직명
+        </p>
+        <h1
+          style="
+            font-weight: 800;
+            font-size: 104px;
+            line-height: 1.14;
+            letter-spacing: -0.04em;
+            margin-top: 118px;
+          "
+        >
+          큰 제목 한 줄<br /><span class="ring pad"
+            >핵심 단어<svg viewBox="0 0 120 60" preserveAspectRatio="none">
+              <path
+                d="M14,34 C11,20 38,8 64,7 C94,6 112,16 110,30 C108,45 80,55 52,53 C27,51 11,44 13,31 C15,18 40,9 66,9 C82,9 96,12 103,17"
+              /></svg
+          ></span>
+          마무리
+        </h1>
+        <p
+          style="
+            font-size: 31px;
+            line-height: 1.5;
+            color: var(--mute);
+            margin-top: 42px;
+          "
+        >
+          <span class="ul mint">키워드 A</span> ·
+          <span class="ul pink">키워드 B</span>,<br />그리고
+          <span class="ul sky">키워드 C</span>
+        </p>
+        <p
+          style="
+            position: absolute;
+            left: 96px;
+            bottom: 64px;
+            font-size: 16px;
+            color: var(--mute);
+          "
+        >
+          2026. 07
+        </p>
+        <!-- ▼ 표지 배경 장식 — 아래 등고선+별은 "기본값(플레이스홀더)"일 뿐이다.
+             매 덱이 같은 그림으로 시작하지 않게, 덱 주제에 맞는 간단한 라인 모티프로 교체 권장.
+             (SKILL.md "표지 모티프" 참조 — path만 사용, 손그림 톤, 제목 안 가리게 여백/코너에)
+             예) 배송·물류 덱이면 아래를 지우고 이런 모티프로:
+               <svg class="sk sky" style="left:946px; top:214px; width:300px; height:340px"
+                    viewBox="0 0 300 340" aria-hidden="true">
+                 <path stroke-dasharray="1 10" d="M14,314 C64,286 36,226 104,206 C172,186 142,120 198,100" />
+                 <path d="M198,52 C220,52 234,70 228,90 C224,102 210,112 198,130 C186,112 172,102 168,90 C162,70 176,52 198,52 Z" />
+                 <path d="M190,82 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0" />
+                 <path d="M6,278 h56 v30 h-56 Z" /><path d="M62,288 h22 l14,12 v8 h-36 Z" />
+                 <path d="M16,318 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0" /><path d="M74,318 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0" />
+               </svg>
+        -->
+        <!-- 기본 필러: 우측 사이드만 흐르는 등고선 (화면을 다 채우지 않게 오른쪽 스트립에만) -->
+        <svg
+          class="sk faint thin"
+          style="left: 1010px; top: 150px; width: 300px; height: 470px"
+          viewBox="0 0 300 470"
+          aria-hidden="true"
+        >
+          <path d="M8,60 C90,30 200,90 296,54" />
+          <path d="M8,130 C90,100 200,160 296,124" />
+          <path d="M8,200 C90,170 200,230 296,194" />
+          <path d="M8,270 C90,240 200,300 296,264" />
+          <path d="M8,340 C90,310 200,370 296,334" />
+          <path d="M8,410 C90,380 200,440 296,404" />
+        </svg>
+        <!-- 필러: 여백에 펜타그램(한붓 별) 액센트 · 살짝 삐뚤 -->
+        <svg
+          class="sk star"
+          style="left: 1108px; top: 150px; width: 150px; height: 150px"
+          viewBox="0 0 150 150"
+          aria-hidden="true"
+        >
+          <path d="M75.0,14.8 L111.1,124.2 L16.6,57.0 L133.8,56.6 L40.4,123.7 L75.0,16.4 L85.8,47.6" transform="translate(-30,-14) scale(0.6)" />
+          <path d="M43.4,7.8 L56.4,68.2 L10.2,26.6 L69.8,33.2 L18.8,62.9 L43.2,7.7 L47.3,25.9" transform="translate(64,74)" />
+        </svg>
+      </section>
+
+      <!-- 한 줄 슬라이드 — 네이비 필드. 큰 문장 + 좌하단 각주. -->
+      <section class="slide one-liner">
+        <h1 style="font-size: 128px; margin-top: 150px">
+          한 줄로<br />핵심을 던짐
+        </h1>
+        <!-- ▼ 유도 스케치 — 아래 사선 화살표도 "예시"일 뿐이다. 매 덱에 이 화살표를 그대로 복붙 금지.
+             문장에서 강조할 대상을 실제로 가리키게 새로 그리거나(방향·위치 맞춰), 가리킬 게 없으면 생략.
+             (SKILL.md "스케치 레이어" 참조 — 장당 가리키는 대상 하나, 바깥→안쪽, 손그림 톤) -->
+        <svg
+          class="sk soft thick"
+          style="left: 900px; top: 100px; width: 310px; height: 410px"
+          viewBox="0 0 310 410"
+          aria-hidden="true"
+        >
+          <path d="M32,380 C78,352 118,318 150,250 C182,182 222,110 256,52" stroke-dasharray="0 13" />
+          <path d="M238,61 C244,57 250,54 256,52 C255,60 255,66 257,72" />
+          <path d="M24,384 C28,378 36,380 37,386 C38,393 30,397 25,393 C21,390 22,385 26,382" />
+        </svg>
+        <p class="fn">
+          부연은 각주로 물러남<br />본문은 한 생각만 담음
+        </p>
+      </section>
+
+      <!-- 제목 + 불릿 A · 대시 마커 — 한 줄로 끝나는 일반 불릿. 가장 흔한 워크호스 -->
+      <section class="slide">
+        <p class="ctx">섹션 — 요약</p>
+        <h2 class="title">
+          핵심은
+          <span class="swash"
+            >세 가지<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path style="stroke-width: 3.5" d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9" /></svg
+          ></span>
+        </h2>
+        <ul class="bul">
+          <li>
+            <b>진입 장벽 제거</b> <span>— 가입 없이 첫 화면에서 바로 체험</span>
+            <ul>
+              <li>온보딩 3단계 → 1단계로 축소</li>
+              <li>결제는 첫 성공 경험 뒤로 미룸</li>
+            </ul>
+          </li>
+          <li><b>반복 이용 설계</b> <span>— 알림·리마인더로 다시 돌아오게</span></li>
+          <li><b>확장 경로 확보</b> <span>— 팀 단위 도입까지 자연스럽게 연결</span></li>
+        </ul>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          결국 <em>한 번 쓰면 계속 쓰는 구조</em>
+        </p>
+      </section>
+
+      <!-- 제목 + 불릿 B · hairline 구분 리스트 — 항목마다 제목 + 설명 두 줄 -->
+      <section class="slide">
+        <p class="ctx">섹션 — 요약</p>
+        <h2 class="title">
+          핵심은
+          <span class="swash"
+            >세 가지<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path style="stroke-width: 3.5" d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9" /></svg
+          ></span>
+        </h2>
+        <div class="rows">
+          <div class="r">
+            <h3>진입 장벽 제거</h3>
+            <p><b>가입 없이</b> 첫 화면에서 바로 체험 — 이탈 지점 최소화</p>
+          </div>
+          <div class="r">
+            <h3>반복 이용 설계</h3>
+            <p>알림·리마인더로 <b>다시 돌아오게</b> — 습관화 루프</p>
+          </div>
+          <div class="r">
+            <h3>확장 경로 확보</h3>
+            <p>개인에서 <b>팀 단위 도입</b>까지 자연스럽게 연결</p>
+          </div>
+        </div>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          결국 <em>한 번 쓰면 계속 쓰는 구조</em>
+        </p>
+      </section>
+
+      <!-- 제목 + 불릿 C · 넘버 리스트(01/02) — 순서·우선순위가 있을 때 -->
+      <section class="slide">
+        <p class="ctx">섹션 — 순서</p>
+        <h2 class="title">
+          이 순서로
+          <span class="swash"
+            >진행<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path style="stroke-width: 3.5" d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9" /></svg
+          ></span>
+        </h2>
+        <ol class="num">
+          <li><b>문제 정의</b> <span>— 무엇을 왜 푸는지 한 문장으로</span></li>
+          <li><b>가설 검증</b> <span>— 작게 만들어 빠르게 확인</span></li>
+          <li><b>확장 적용</b> <span>— 검증된 것만 넓게 펼침</span></li>
+        </ol>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          순서를 지키면 <em>되돌아갈 일이 줄어듦</em>
+        </p>
+      </section>
+
+      <!-- 여정 — 가로 스텝. ctx 라벨 → title → journey → 좌하단 take -->
+      <section class="slide">
+        <p class="ctx">섹션 — 맥락 라벨</p>
+        <h2 class="title">
+          점이 아니라,
+          <span class="swash"
+            >이어진 흐름<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path
+                style="stroke-width: 3.5"
+                d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9"
+              /></svg
+          ></span>
+        </h2>
+        <div class="journey">
+          <div class="jstep">
+            <div class="w">발견</div>
+            <div class="s">첫 접점 — 진입 경로</div>
+          </div>
+          <div class="jarr">
+            <svg class="ska" viewBox="0 0 40 22" aria-hidden="true">
+              <path d="M2,12 C12,10 23,10 33,11 M26,5 C29,8 32,10 35,11.5 C32,13.5 28.5,16 26,18" />
+            </svg>
+          </div>
+          <div class="jstep">
+            <div class="w">가입</div>
+            <div class="s">등록 · 신원 확인</div>
+          </div>
+          <div class="jarr">
+            <svg class="ska" viewBox="0 0 40 22" aria-hidden="true">
+              <path d="M2,12 C12,10 23,10 33,11 M26,5 C29,8 32,10 35,11.5 C32,13.5 28.5,16 26,18" />
+            </svg>
+          </div>
+          <div class="jstep">
+            <div class="w">운영 · 성장</div>
+            <div class="s">반복 이용 · 확장</div>
+          </div>
+        </div>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          한 줄 결론 — <em>강조는 프라이머리</em>
+        </p>
+      </section>
+
+      <!-- 사분면 — 상단 프라이머리 괘선만으로 구획 (박스 없음) -->
+      <section class="slide">
+        <p class="ctx">섹션 — 분류</p>
+        <h2 class="title">
+          핵심은
+          <span class="swash"
+            >넷<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path style="stroke-width: 3.5" d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9" /></svg
+          ></span>
+        </h2>
+        <div class="quad">
+          <div class="q">
+            <h3><i>①</i> 첫째 항목</h3>
+            <p><b>요지</b> — 설명은 회색, 강조어만 먹색으로</p>
+          </div>
+          <div class="q">
+            <h3><i>②</i> 둘째 항목</h3>
+            <p><b>요지</b> — 음슴체 · 마침표 없음</p>
+          </div>
+          <div class="q">
+            <h3><i>③</i> 셋째 항목</h3>
+            <p><b>요지</b> — 한 줄로 끊음</p>
+          </div>
+          <div class="q">
+            <h3><i>④</i> 넷째 항목</h3>
+            <p><b>요지</b> — 명사구로 종결</p>
+          </div>
+        </div>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          한 문장 결론 — <em>정말 중요한 한 가지</em>
+        </p>
+      </section>
+
+      <!-- 표 — 세로 괘선·셀 배경 없음. 상단 프라이머리 괘선 + 행 hairline -->
+      <section class="slide">
+        <p class="ctx">섹션 — 매핑</p>
+        <h2 class="title">표는 괘선을 최소로</h2>
+        <table class="min" style="margin-top: 20px">
+          <tr class="hd">
+            <td>항목</td>
+            <td>주인</td>
+            <td>관계</td>
+          </tr>
+          <tr>
+            <td class="k">첫째 도메인</td>
+            <td>담당 A</td>
+            <td><b>생성 · 소유</b> — 핵심</td>
+          </tr>
+          <tr>
+            <td class="k">둘째 도메인</td>
+            <td>담당 B</td>
+            <td><b>읽기</b>만 <span>— 쓰기 경로 없음</span></td>
+          </tr>
+        </table>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          결론은 <em>표가 아니라 한 줄</em>로
+        </p>
+      </section>
+
+      <!-- 포커스 버스트 — 한 지점으로 시선을 모으는 원형 화살표 무리 + 필러 낙서 -->
+      <section class="slide">
+        <p class="ctx">섹션 — 강조</p>
+        <h2 class="title">여기에 <span class="ul blue">시선</span>을 모음</h2>
+
+        <!-- 중앙 초점 단어 (버스트가 감쌀 대상) -->
+        <div
+          style="
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 340px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 72px;
+            letter-spacing: -0.03em;
+          "
+        >
+          핵심 하나
+        </div>
+        <!-- 포커스 버스트(타원형): 넓은 텍스트를 좌우로 감싸도록 늘린 배치.
+             중앙 타원(빈 자리)에 텍스트가 들어가 화살표와 안 겹친다. 수평 화살표는 빼서
+             글자 좌우 끝과 부딪히지 않게 함. 대상 중심(640,385)에 얹어 정렬(580×360). -->
+        <svg
+          class="sk focus"
+          style="left: 350px; top: 205px; width: 580px; height: 360px"
+          viewBox="0 0 580 360"
+          aria-hidden="true"
+        >
+          <path d="M455.2,51.3 Q434.0,74.6 418.1,102.1 M419.0,86.6 L418.1,102.1 L431.0,93.5" />
+          <path d="M290.0,19.2 Q288.5,51.2 290.0,83.3 M283.1,72.0 L290.0,83.3 L295.8,71.4" />
+          <path d="M122.9,48.9 Q143.5,74.8 161.6,102.6 M149.9,95.8 L161.6,102.6 L160.1,89.1" />
+          <path d="M454.0,307.1 Q435.0,282.0 416.7,256.4 M428.7,263.3 L416.7,256.4 L419.4,269.9" />
+          <path d="M290.0,344.3 Q295.4,311.5 290.0,278.7 M297.7,288.5 L290.0,278.7 L285.8,290.5" />
+          <path d="M122.9,311.2 Q145.0,287.9 160.0,259.1 M159.4,273.0 L160.0,259.1 L148.9,267.5" />
+          <path d="M34.6,122.9 Q60.9,140.7 91.0,148.1 M76.7,150.2 L91.0,148.1 L79.2,139.6" />
+          <path d="M540.9,124.6 Q515.0,134.3 489.9,146.3 M498.3,135.7 L489.9,146.3 L503.4,146.4" />
+        </svg>
+      </section>
+
+      <!-- S07 · 마무리(EOD) — 덱의 끝을 알리는 클로징. 항상 마지막에 한 장.
+           두 결 중 하나만 남긴다: (A) 감사 인사 결(아래 활성) · (B) End of Document 결(그 아래 주석). -->
+      <section class="slide one-liner">
+        <h1 style="font-size: 108px; margin-top: 150px">
+          들어주셔서<br /><span class="swash"
+            >고맙습니다<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path
+                style="stroke-width: 3.5"
+                d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9"
+              /></svg
+          ></span>
+        </h1>
+        <p class="fn">질문·피드백 환영<br /><b>팀 · 조직명</b> · 담당자</p>
+        <!-- 필러: 우상단 여백에 아주 옅은 손그림 별 하나 (한 줄 슬라이드라 자동으로 흰색) -->
+        <svg
+          class="sk star"
+          style="left: 1078px; top: 92px; width: 120px; height: 120px"
+          viewBox="0 0 120 120"
+          aria-hidden="true"
+        >
+          <path d="M43.4,7.8 L56.4,68.2 L10.2,26.6 L69.8,33.2 L18.8,62.9 L43.2,7.7 L47.3,25.9" transform="translate(20,18)" />
+        </svg>
+      </section>
+
+      <!-- (B) End of Document 결 — 감사 결 대신 담담하게 문서의 끝을 표기하려면
+           위 section 을 지우고 아래 주석을 풀어 활성화한다. 페이퍼 배경 · 여백 중심.
+      <section class="slide">
+        <p class="ctx" style="margin-top: 236px; font-size: 27px">End of Document</p>
+        <h2 class="title" style="font-size: 76px">
+          여기까지<span class="ul blue">입니다</span>
+        </h2>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          질문·피드백 환영 — <em>팀 · 조직명</em>
+        </p>
+      </section>
+      -->
+    </div>
+
+    <script>
+      (() => {
+        const slides = [...document.querySelectorAll(".slide")];
+        let cur =
+          Math.min(
+            Math.max(parseInt(location.hash.slice(1)) || 1, 1),
+            slides.length,
+          ) - 1;
+        const stage = document.getElementById("stage");
+        function show(i) {
+          cur = Math.min(Math.max(i, 0), slides.length - 1);
+          slides.forEach((s, k) => s.classList.toggle("active", k === cur));
+          location.hash = cur + 1;
+        }
+        function fit() {
+          const s = Math.min(innerWidth / 1280, innerHeight / 720) * 0.985;
+          stage.style.transform = "translate(-50%,-50%) scale(" + s + ")";
+        }
+        addEventListener("keydown", (e) => {
+          if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
+            e.preventDefault();
+            show(cur + 1);
+          } else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
+            e.preventDefault();
+            show(cur - 1);
+          } else if (e.key === "Home") show(0);
+          else if (e.key === "End") show(slides.length - 1);
+        });
+        // 데스크톱: 마우스 클릭 좌/우 절반 (모바일은 아래 touch 로 처리)
+        addEventListener("click", (e) => {
+          if (e.target.closest("a")) return;
+          show(e.clientX > innerWidth / 2 ? cur + 1 : cur - 1);
+        });
+        // 모바일: 가로 스와이프로 넘기고, 짧은 탭은 좌/우 절반으로 이동.
+        // touchend 에서 preventDefault 해 뒤따르는 합성 click 을 막아 중복 이동 방지.
+        let tx = 0, ty = 0;
+        addEventListener(
+          "touchstart",
+          (e) => {
+            tx = e.changedTouches[0].clientX;
+            ty = e.changedTouches[0].clientY;
+          },
+          { passive: true },
+        );
+        addEventListener(
+          "touchend",
+          (e) => {
+            if (e.target.closest("a")) return;
+            const dx = e.changedTouches[0].clientX - tx;
+            const dy = e.changedTouches[0].clientY - ty;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+              show(dx < 0 ? cur + 1 : cur - 1); // 좌로 스와이프 → 다음
+            } else if (Math.abs(dx) < 12 && Math.abs(dy) < 12) {
+              show(tx > innerWidth / 2 ? cur + 1 : cur - 1); // 탭
+            }
+            e.preventDefault();
+          },
+          { passive: false },
+        );
+        addEventListener("resize", fit);
+        fit();
+        show(cur);
+      })();
+    </script>
+  </body>
+</html>
