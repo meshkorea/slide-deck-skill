@@ -3,11 +3,12 @@
 // 덱 제작 후 "실제로 어떻게 보이는지"를 눈으로 확인하는 유일한 경로 — 코드만 읽지 말 것.
 //
 // 사용법:
-//   node render.mjs <deck.html> [--out DIR] [--slide N] [--range A-B]
+//   node render.mjs <deck.html> [--out DIR] [--slide N] [--range A-B] [--wait MS]
 //   node render.mjs slides/foo.html                 # 전 슬라이드 → OUT/slide-01.png ...
 //   node render.mjs slides/foo.html --slide 3        # 3번 슬라이드만
 //   node render.mjs slides/foo.html --range 6-9      # 6~9번만
 //   node render.mjs slides/foo.html --out /tmp/shots # 출력 폴더 지정
+//   node render.mjs slides/foo.html --wait 12000     # 폰트 로드 대기 직접 지정(ms)
 //
 // 기본 출력 폴더: <deck와 같은 폴더>/.render/
 // Chrome 경로: 환경변수 CHROME 우선, 없으면 macOS 기본 → 탐색.
@@ -80,6 +81,11 @@ const chrome = findChrome();
 const pad = (n) => String(n).padStart(2, "0");
 const written = [];
 
+// 폰트 로드 대기(가상 시간). 코드 스니펫 장이 있으면 고정폭 웹폰트가 웨이트당 ~800KB라
+// 기본 4초로는 글리프가 못 도착해 시스템 폰트로 폴백된 스크린샷이 나온다 — 자동으로 늘린다.
+const hasCode = /<pre[^>]*class="[^"]*\bcode\b/.test(htmlNoComments);
+const wait = parseInt(opt("--wait") || (hasCode ? "12000" : "4000"), 10);
+
 for (const n of targets) {
   const out = join(outDir, `slide-${pad(n)}.png`);
   const url = `file://${deck}#${n}`;
@@ -91,7 +97,7 @@ for (const n of targets) {
       "--hide-scrollbars",
       "--force-color-profile=srgb",
       "--window-size=1280,720",
-      "--virtual-time-budget=4000", // 폰트 로드 + fit() 대기
+      `--virtual-time-budget=${wait}`, // 폰트 로드 + fit() 대기
       `--screenshot=${out}`,
       url,
     ],
@@ -100,6 +106,8 @@ for (const n of targets) {
   if (existsSync(out)) written.push(out);
 }
 
-console.log(`덱: ${basename(deck)} · 슬라이드 ${total}장 · 렌더 ${written.length}장`);
+console.log(
+  `덱: ${basename(deck)} · 슬라이드 ${total}장 · 렌더 ${written.length}장 · 폰트 대기 ${wait}ms${hasCode ? " (코드 장 있음)" : ""}`,
+);
 console.log(`출력: ${outDir}`);
 for (const w of written) console.log(`  ${w}`);

@@ -10,7 +10,8 @@
 
   스타일 규약은 SKILL.md 참조. 요약:
     · 폰트 — 덱마다 하나만 골라 씀(기본 Asta Sans). noonnu 무료 글꼴 프리셋에서 선택(위 <link> 주석)
-      · 한 덱 = 한 폰트 · 모노스페이스만 금지 · --font 와 <link> href 를 짝으로 교체
+      · 한 덱 = 한 폰트 · 모노스페이스 금지 · --font 와 <link> href 를 짝으로 교체
+      · 유일한 예외 = 코드 스니펫(pre.code / code.inl) — 고정폭 --font-code 고정, 덱 폰트와 무관
     · 큰 타이포 · 카피 줄이기 (본문 32px 권장 · 넘치면 .dense 로 축소하되 24px 미만 금지 · 캡션 ≥18px @1280×720)
     · 말투 — 제목 간결 명사형, 본문 음슴체(-함/-됨/-음), 마침표 최소
     · 텍스트를 사각 틀에 가두지 않음 — 구획은 hairline(가는 줄)·여백으로
@@ -18,6 +19,10 @@
     · 프라이머리 컬러는 oklch 변수(--main-h)로 교체 가능 — :root 프리셋 표 참조. 쨍한 원색 금지(L·C 고정)
       (변수명 --blue 는 레거시 — 색은 덱마다 다르니 "블루"라 부르지 말 것)
     · 포인트 컬러는 형광펜식 밑줄(.ul)로만, 글자색 입히기·사각 마커 금지
+      · 예외 = 코드 블록 구문 색 — Catppuccin 계열 별도 팔레트(6역할: k/s/f/t/n/c), 무지개색 금지
+    · 코드 장 — pre.code 는 라이트가 기본(페이퍼 배경에 맞춤) · 다크 필드는 .dark, 요청 시에만
+      강조 .hl / 물림 .dim / 변경 .del·.add
+      전면 24px 64자 10줄 · 2단(.codecols) 21px 36자 13줄 · 하한 20px
     · 스케치: 강조엔 링·스와시·유도 화살표 / 여백엔 포커스 버스트(.sk.focus)·필러(.sk.faint)·손그림 별(.sk.star)
       필러는 크게 + 아주 옅게(배경 텍스처 톤) · 화면 가장자리로 빼서 잘리듯(edge-bleed), 여백 안에 뚝 놓지 말 것
       버스트는 텍스트에 안 닿게 · 장당 1~2개, 진짜 빈 곳에만
@@ -41,12 +46,23 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/fonts-archive/AstaSans/AstaSans.css"
     />
+    <!-- ── 코드 폰트 — 코드 스니펫 장(pre.code)에서만 쓰는 고정폭. 덱 폰트와 무관하게 항상 이것.
+         Monoplex KR Wide Nerd(IBM Plex Mono + IBM Plex Sans KR) — 라틴 0.6em · 한글 1.0em 로
+         정확히 2:1 이라 한글 주석이 섞여도 열이 안 어긋난다. 웨이트 100–800.
+         코드 장이 없는 덱이면 글리프는 내려받지 않으니(font-display:swap) 이 <link> 는 그냥 둬도 무해.
+         ※ 코드 장이 있으면 woff2 ~800KB/웨이트 — 렌더 시 폰트 로드를 더 기다려야 한다(render.mjs 가 자동 처리). -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/fonts-archive/MonoplexKRWideNerd/MonoplexKRWideNerd.css"
+    />
     <style>
       :root {
         /* 폰트 — 위 <link> 와 짝. 바꿀 땐 이 값과 <link> href 를 함께 교체.
            프리셋 family: "Asta Sans" · "Paperlogy" · "Pretendard" · "SUIT"
                         · "Gmarket Sans" · "Nanum Square Neo" · "Nanum Square" */
         --font: "Asta Sans";
+        /* 코드 폰트 — 덱 폰트를 바꿔도 이건 고정. 모노스페이스가 허용되는 유일한 자리 */
+        --font-code: "Monoplex KR Wide Nerd";
 
         --paper: #f7f7f4;
         --ink: #14161a;
@@ -81,6 +97,8 @@
         --body: 32px;
         /* 캡션·라벨·표 헤더 — 문서 크기(≤18px)로 쪼그라들지 않게 24px 기본 */
         --cap: 24px;
+        /* 코드 글자 크기 — 24px 기본. 2단 장(.codecols)은 21px, 하한 20px */
+        --code: 24px;
       }
       * {
         margin: 0;
@@ -654,11 +672,165 @@
         color: var(--mute);
       }
 
+      /* ── 코드 스니펫 — 이 스타일에서 모노스페이스가 허용되는 유일한 자리 ──
+         코드는 들여쓰기·열 정렬이 의미를 갖는다("네모가 의미를 갖는 곳만 테두리"와 같은 결의 예외).
+         라벨·날짜·본문에는 여전히 모노 금지 — 파일 경로 캡션도 .lbl(덱 폰트)로 쓴다.
+         슬라이드 배경이 페이퍼(라이트)이므로 코드도 라이트가 기본 — 옅은 잉크 틴트 + 좌측
+         프라이머리 괘선. 다크(네이비 필드)는 .dark 로, 사용자가 따로 요청할 때만 쓴다.
+         강조는 .hl(형광펜) · 지금 안 다루는 줄은 .dim · 변경 전후는 .del/.add.
+         전면 블록은 24px 로 한 줄 64자 · 10줄까지. 넘치면 발췌하거나 … 로 접을 것. */
+      pre.code {
+        font-family:
+          var(--font-code), ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: var(--code);
+        line-height: 1.58;
+        letter-spacing: 0; /* 모노는 자간 조정 금지 — 고정폭이 깨진다 */
+        font-weight: 400;
+        background: rgba(20, 22, 26, 0.045);
+        color: var(--ink);
+        box-shadow: inset 3px 0 0 var(--blue); /* 좌측 프라이머리 괘선 — 테두리 아님 */
+        padding: 24px 30px;
+        border-radius: 3px;
+        tab-size: 2;
+        white-space: pre;
+        overflow: hidden;
+        margin-top: 26px;
+        /* 필드가 코드를 감싸게(shrink-to-fit) — 블록으로 두면 가장 긴 줄 오른쪽에
+           빈 틴트가 넓게 남아 뜬다. 코드 폭을 꽉 채우고 싶으면 class 에 wide 추가. */
+        display: inline-block;
+        max-width: 100%;
+
+        /* 구문 색 — Catppuccin Latte 계열(차분한 톤). 6개 역할로만 제한.
+           덱의 포인트 3색(--mint/--pink/--sky)과는 별도 팔레트다 — 포인트색은 여전히 밑줄 전용.
+           무지개색 하이라이팅 금지: 아래 6개 밖으로 색을 늘리지 말 것. */
+        --tk-key: #8839ef; /* 키워드 · 제어문 (mauve) */
+        --tk-str: #40a02b; /* 문자열 (green) */
+        --tk-fn: #1e66d5; /* 함수 · 메서드 (blue) */
+        --tk-typ: #df8e1d; /* 타입 · 클래스 (yellow) */
+        --tk-num: #fe640b; /* 수치 · 상수 (peach) */
+        --tk-com: #8c8fa1; /* 주석 — 색보다 농도로 물림 */
+      }
+      /* 코드 폭을 열 전체로 채우는 변형 — 긴 줄이 많아 필드가 어차피 꽉 찰 때만 */
+      pre.code.wide {
+        display: block;
+      }
+      /* 다크 변형 — 프라이머리 네이비 필드 + 흰 코드(한 줄 슬라이드와 같은 결).
+         라이트 배경의 덱에는 무거우니 기본으로 쓰지 말 것 — 사용자가 다크 코드를
+         원한다고 말했을 때만. 구문 색은 Catppuccin Mocha 로 갈아끼운다. */
+      pre.code.dark {
+        background: var(--blue);
+        color: var(--wht);
+        box-shadow: none;
+
+        --tk-key: #cba6f7;
+        --tk-str: #a6e3a1;
+        --tk-fn: #89b4fa;
+        --tk-typ: #f9e2af;
+        --tk-num: #fab387;
+        --tk-com: rgba(205, 214, 244, 0.62);
+      }
+      pre.code .k {
+        color: var(--tk-key);
+      }
+      pre.code .s {
+        color: var(--tk-str);
+      }
+      pre.code .f {
+        color: var(--tk-fn);
+      }
+      pre.code .t {
+        color: var(--tk-typ);
+      }
+      pre.code .n {
+        color: var(--tk-num);
+      }
+      pre.code .c {
+        color: var(--tk-com);
+      }
+      /* 강조 — 형광펜식 인라인 배경. 여러 줄에 걸쳐도 줄마다 칠해지게 clone.
+         장당 강조는 한 곳(많아야 두 곳) — 다 강조하면 아무것도 강조가 아니다. */
+      pre.code .hl {
+        background: oklch(var(--main-l) var(--main-c) var(--main-h) / 0.16);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        padding: 1px 5px;
+        margin: 0 -3px;
+        border-radius: 2px;
+      }
+      pre.code.dark .hl {
+        background: rgba(252, 252, 250, 0.17);
+      }
+      /* 흐림 — 지금 얘기하지 않는 줄. 지우지 말고 물려서 맥락만 남긴다.
+         구문 색 위에 곱해지므로 0.42 밑으로 내리면 주석이 아예 안 읽힌다 */
+      pre.code .dim {
+        opacity: 0.42;
+      }
+      /* diff — 줄 앞 +/− 는 코드 안에 글자로 직접 적고(거터 CSS 없음), 배경만 옅게 */
+      pre.code .add,
+      pre.code .del {
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        padding: 1px 5px;
+        margin: 0 -3px;
+        border-radius: 2px;
+      }
+      pre.code .add {
+        background: rgba(67, 214, 174, 0.32);
+      }
+      pre.code .del {
+        background: rgba(241, 134, 176, 0.3);
+      }
+      pre.code.dark .add {
+        background: rgba(67, 214, 174, 0.3);
+      }
+      pre.code.dark .del {
+        background: rgba(241, 134, 176, 0.26);
+      }
+      /* 코드 + 설명 2단 — 좌 코드 / 우 설명. 가운데 hairline 하나로만 나눔(박스 아님).
+         코드 열은 21px 로 낮춰 한 줄 36자 · 13줄까지. */
+      .codecols {
+        display: grid;
+        grid-template-columns: 1.12fr 1fr;
+        column-gap: 52px;
+        margin-top: 28px;
+        align-items: start;
+        --code: 21px;
+      }
+      .codecols .ex {
+        border-left: 1px solid var(--hair);
+        padding-left: 52px;
+      }
+      .codecols pre.code {
+        margin-top: 10px;
+        padding: 20px 22px;
+      }
+      .codecols .rows {
+        margin-top: 0;
+      }
+      .codecols .rows .r {
+        padding: 13px 0;
+      }
+      .codecols .rows .r h3 {
+        font-size: 27px;
+      }
+      .codecols .rows .r p {
+        font-size: 26px;
+      }
+      /* 본문 속 짧은 식별자 — 글자 그대로가 중요한 것(플래그·필드명)만. 배경·박스 없이 폰트만 바꿈.
+         남발 금지 — 대개는 <b> 굵게로 충분하다. 장당 두세 개까지. */
+      code.inl {
+        font-family:
+          var(--font-code), ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+        letter-spacing: 0;
+      }
+
       /* 꽉 찬 장에만 .dense 로 본문을 한 단계 축소 — 남발 금지, 넘치면 먼저 카피를 줄일 것.
          --body 를 낮추므로 리스트·표·밴드·flow·사분면 본문이 한꺼번에 줄어든다.
          26px 로 낮추되 24px 밑으로는 절대 내리지 말 것(하한). 더 필요하면 카피를 덜어낸다. */
       .dense {
         --body: 26px;
+        --code: 21px; /* 코드도 한 단계 — 20px 밑으로는 금지 */
       }
       .dense .band {
         padding: 14px 0;
@@ -950,6 +1122,72 @@
         </table>
         <p class="take" style="position: absolute; left: 96px; bottom: 64px">
           결론은 <em>표가 아니라 한 줄</em>로
+        </p>
+      </section>
+
+      <!-- 코드 A · 전면 블록 — 라이트 톤 기본. 지금 안 다루는 줄은 .dim 으로 물리고 .hl 로 한 곳만 강조.
+           pre 안은 white-space:pre 라 소스의 들여쓰기가 그대로 코드 들여쓰기다 — 반드시 열 0에서 시작.
+           <pre class="code"> 바로 뒤 줄바꿈은 파서가 버리지만, </pre> 앞 줄바꿈은 빈 줄로 남으니 붙여 쓸 것.
+           파일 경로 캡션은 .lbl(덱 폰트) — 경로에도 모노 쓰지 않는다.
+           사용자가 다크 코드를 원하면 class="code dark" (기본으로 쓰지 말 것). -->
+      <section class="slide">
+        <p class="ctx">섹션 — 구현</p>
+        <h2 class="title">
+          바뀐 건
+          <span class="swash"
+            >이 한 줄<svg viewBox="0 0 100 12" preserveAspectRatio="none">
+              <path style="stroke-width: 3.5" d="M2,7 C25,3 62,2 98,5 M5,10 C35,7 72,6 96,9" /></svg
+          ></span>
+        </h2>
+        <p class="lbl" style="margin-top: 18px">payment/charge.ts</p>
+        <pre class="code">
+<span class="k">export</span> <span class="k">async</span> <span class="k">function</span> <span class="f">charge</span>(order: <span class="t">Order</span>) {
+<span class="dim">  <span class="k">const</span> total = <span class="f">sum</span>(order.items)          <span class="c">// 합계는 기존 로직 그대로</span></span>
+<span class="dim">  <span class="k">if</span> (total &lt;= <span class="n">0</span>) <span class="k">throw</span> <span class="k">new</span> <span class="t">Error</span>(<span class="s">"빈 주문"</span>)</span>
+
+<span class="hl">  <span class="k">const</span> res = <span class="k">await</span> gateway.<span class="f">pay</span>(order.id, total)</span>
+
+  <span class="k">return</span> { ok: res.approved, at: res.paidAt }
+}</pre>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          결제 호출만 <em>게이트웨이로 옮김</em> — 나머지는 그대로
+        </p>
+      </section>
+
+      <!-- 코드 B · 코드 + 설명 2단 — 좌 코드(diff) / 우 설명. 코드 열은 21px · 한 줄 36자까지.
+           변경 전후는 줄 앞에 -/+ 를 글자로 적고 .del/.add 로 배경만 옅게 깐다. -->
+      <section class="slide">
+        <p class="ctx">섹션 — 변경</p>
+        <h2 class="title">수수료는 지역별로</h2>
+        <div class="codecols">
+          <div>
+            <p class="lbl">settlement/fee.ts</p>
+            <pre class="code">
+ <span class="k">export</span> <span class="k">function</span> <span class="f">fee</span>(o: <span class="t">Order</span>) {
+<span class="del">-  <span class="k">return</span> o.total * <span class="n">0.1</span></span>
+<span class="add">+  <span class="k">const</span> r = <span class="f">rateOf</span>(o.region)</span>
+<span class="add">+  <span class="k">return</span> <span class="f">round</span>(o.total * r)</span>
+ }</pre>
+          </div>
+          <div class="ex">
+            <div class="rows">
+              <div class="r">
+                <h3>고정률 제거</h3>
+                <p>전 지역 <b>10%</b> 가정이 깨진 지 오래됨</p>
+              </div>
+              <div class="r">
+                <h3>지역 테이블 조회</h3>
+                <p><b>rateOf</b> 하나만 갈아끼우면 정책 변경 흡수</p>
+              </div>
+              <div class="r">
+                <h3>반올림 일원화</h3>
+                <p>호출부마다 달랐던 절사 규칙을 <b>한 곳</b>으로</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          정책은 <em>데이터로</em>, 코드는 그대로
         </p>
       </section>
 
