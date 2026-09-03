@@ -1287,6 +1287,10 @@
           const s = Math.min(innerWidth / 1280, innerHeight / 720) * 0.985;
           stage.style.transform = "translate(-50%,-50%) scale(" + s + ")";
         }
+        function toggleFullscreen() {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen();
+        }
         addEventListener("keydown", (e) => {
           if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
             e.preventDefault();
@@ -1296,6 +1300,15 @@
             show(cur - 1);
           } else if (e.key === "Home") show(0);
           else if (e.key === "End") show(slides.length - 1);
+          // e.code(물리 키 위치)로 판별 — 한글 입력 모드에선 F 키가 e.key로 "ㄹ"이 찍혀 감지가 안 되므로 e.key 대신 e.code를 쓴다.
+          else if (
+            e.code === "KeyF" &&
+            !e.repeat &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            !e.altKey
+          )
+            toggleFullscreen();
         });
         // 데스크톱: 마우스 클릭 좌/우 절반 (모바일은 아래 touch 로 처리)
         addEventListener("click", (e) => {
