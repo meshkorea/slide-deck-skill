@@ -34,6 +34,7 @@
     <!-- ── 폰트 — noonnu.cc 무료 글꼴 중 하나(fonts-archive CDN). 덱마다 하나만 골라 씀.
          아래 <link> href 와 :root 의 --font 를 짝으로 바꾸면 덱 전체 폰트가 교체된다.
          프리셋(링크 파일명 · font-family · weight 범위):
+           Wanted Sans ★    (npm 경로)      · "Wanted Sans Variable" 400–1000 또렷한 중립 산세리프 · 본문 가독성
            Asta Sans(기본)  AstaSans        · "Asta Sans"        300–800     개성 있는 지오메트릭 · 이 스타일의 시그니처
            페이퍼로지        Paperlogy       · "Paperlogy"        100–900     둥근 디스플레이 · 표지·한 줄 슬라이드에 강함
            프리텐다드        Pretendard      · "Pretendard"       100–900     가장 무난한 본문용 산세리프
@@ -41,6 +42,8 @@
            G마켓 산스 ※     GmarketSans     · "Gmarket Sans"     300·500·700 또렷한 브랜드 톤
            나눔스퀘어 네오 ※ NanumSquareNeo  · "Nanum Square Neo" 300·400·700–900 각진 고딕 · 힘 있는 제목
            나눔스퀘어 ※      NanumSquare     · "Nanum Square"     300·400·700·800 클래식 고딕
+         ★ Wanted Sans 만 fonts-archive 가 아니다 — <link> href 를 아래 주소로 통째로 교체:
+           https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
          ※ 표시는 웨이트 단계가 성겨(500·600 없음) 제목/본문 위계가 살짝 뭉갤 수 있음 — 렌더로 확인 필수. -->
     <link
       rel="stylesheet"
@@ -502,6 +505,60 @@
         margin-top: 9px;
         line-height: 1.4;
         letter-spacing: -0.02em;
+      }
+
+      /* 3열 — 사분면과 같은 결(상단 괘선만, 박스 없음). 병렬·동등·짧은 세 항목 전용.
+         열마다 손그림을 하나씩 얹어 가로 폭을 채운다. 설명이 두 줄을 넘기면 .rows 를 쓸 것. */
+      .trio {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 48px;
+        margin-top: 36px;
+      }
+      .trio .t {
+        border-top: 2px solid var(--blue);
+        padding-top: 20px;
+      }
+      .trio .ill {
+        height: 152px;
+        margin-bottom: 18px;
+      }
+      .trio .ill svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .trio .ill svg path {
+        fill: none;
+        stroke: var(--blue);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-opacity: 0.55;
+      }
+      .trio h3 {
+        font-weight: 800;
+        font-size: 34px;
+        letter-spacing: -0.01em;
+        line-height: 1.22;
+        word-break: keep-all;
+      }
+      .trio h3 i {
+        font-style: normal;
+        color: var(--blue);
+        margin-right: 4px;
+      }
+      .trio p {
+        margin-top: 12px;
+        font-size: var(--body);
+        line-height: 1.5;
+        letter-spacing: -0.02em;
+        color: var(--mute);
+        word-break: keep-all;
+      }
+      .trio p b {
+        color: var(--ink);
+        font-weight: 700;
       }
 
       /* 사분면 — 상단 프라이머리 괘선으로만 구획, 번호는 프라이머리 */
@@ -1063,6 +1120,43 @@
         </div>
         <p class="take" style="position: absolute; left: 96px; bottom: 64px">
           한 줄 결론 — <em>강조는 프라이머리</em>
+        </p>
+      </section>
+
+      <!-- 3열 — 병렬·동등·짧은 세 항목. 열마다 손그림 하나(path만, 왼쪽 축 정렬) -->
+      <section class="slide">
+        <p class="ctx">섹션 — 나란한 셋</p>
+        <h2 class="title">핵심은 <span class="ul blue">셋</span></h2>
+        <div class="trio">
+          <div class="t">
+            <div class="ill"><svg viewBox="0 0 200 150" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
+              <path d="M8,34 h66 v48 h-40 l-14,14 v-14 h-12 Z" />
+              <path d="M126,34 h66 v48 h-40 l-14,14 v-14 h-12 Z" />
+              <path d="M88,50 h24 M88,66 h24" />
+            </svg></div>
+            <h3><i>&#9312;</i> 첫째 항목</h3>
+            <p>설명은 회색, 강조어만 <b>먹색으로</b></p>
+          </div>
+          <div class="t">
+            <div class="ill"><svg viewBox="0 0 200 150" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
+              <path d="M22,58 h54 l14,18 h88 v62 h-156 Z" />
+              <path d="M132,6 v36 M120,32 L132,44 L144,32" />
+            </svg></div>
+            <h3><i>&#9313;</i> 둘째 항목</h3>
+            <p>두 줄을 넘기면 <b>.rows 를 쓸 것</b></p>
+          </div>
+          <div class="t">
+            <div class="ill"><svg viewBox="0 0 200 150" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
+              <path d="M56,14 h58 l30,30 v96 h-88 Z" />
+              <path d="M114,14 v30 h30" />
+              <path d="M72,62 h56 M72,82 h56 M72,102 h36" />
+            </svg></div>
+            <h3><i>&#9314;</i> 셋째 항목</h3>
+            <p>일러스트는 <b>path 만</b> — circle·rect 금지</p>
+          </div>
+        </div>
+        <p class="take" style="position: absolute; left: 96px; bottom: 64px">
+          한 문장 결론 — <em>정말 중요한 한 가지</em>
         </p>
       </section>
 
